@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+  </head>
+  <body>
+      <pre id="test">
+Left stick horizontal  0
+Left stick vertical    0
+Right stick horizontal 0
+Right stick vertical   0
+Up                     0
+Down                   0
+Left click             0
+Right click            0
+    </div>
+  </body>
+
+<script>
+
+
+var rAF = window.mozRequestAnimationFrame ||
+  window.webkitRequestAnimationFrame ||
+  window.requestAnimationFrame;
+
+var rAFStop = window.mozCancelRequestAnimationFrame ||
+  window.webkitCancelRequestAnimationFrame ||
+  window.cancelRequestAnimationFrame;
+
+window.addEventListener("gamepadconnected", function() {
+    var gp = navigator.getGamepads()[0];
+    gameLoop();
+});
+
+window.addEventListener("gamepaddisconnected", function() {
+    gamepadInfo.innerHTML = "Waiting for gamepad.";
+    rAFStop(start);
+});
+
+function gameLoop() {
+    gamepadStart()
+    var start = rAF(gameLoop);
+};
+
+function gamepadStart(){
+    if (navigator.platform == "MacIntel"){
+        gamepadMac();
+    }
+    else if (navigator.platform == "linux"){
+        gamepadMac();
+    }
+    else {
+        gamepadDisplayUnknown();
+    }
+}
+
+function gamepadMac(){
+    var gamepadData = [];
+    var buttonText = "";
+    var gp = navigator.getGamepads()[0];
+    gamepadData[0] = gp.axes[0];
+    gamepadData[1] = gp.axes[1];
+    gamepadData[2] = gp.axes[2];
+    gamepadData[3] = gp.axes[3];
+    gamepadData[4] = gp.buttons[7].value;
+    gamepadData[5] = gp.buttons[6].value;
+    gamepadData[6] = gp.buttons[4].value;
+    gamepadData[7] = gp.buttons[5].value;
+    gamepadDisplay(gamepadData,gp);
+}
+
+function gamepadLinux(){
+    var gamepadData = {};
+
+}
+
+function gamepadDisplay(gamepadData,gp){
+    var output = document.getElementById("test");
+    output.innerHTML = "";
+    output.innerHTML += "Left stick horizontal  " + gamepadData[0] + "<br/>";
+    output.innerHTML += "Left stick vertical    " + gamepadData[1] + "<br/>";
+    output.innerHTML += "Right stick horizontal " + gamepadData[2] + "<br/>";
+    output.innerHTML += "Right stick vertical   " + gamepadData[3] + "<br/>";
+    output.innerHTML += "Up                     " + gamepadData[4] + "<br/>";
+    output.innerHTML += "Down                   " + gamepadData[5] + "<br/>";
+    output.innerHTML += "Left click             " + gamepadData[6] + "<br/>";
+    output.innerHTML += "Right click            " + gamepadData[7] + "<br/>";
+    output.innerHTML += "<br/>";
+    output.innerHTML += navigator.platform + "<br/>";
+    output.innerHTML += "<br/>";
+    for (var axisCount = 0; axisCount < gp["axes"].length; axisCount++){
+        output.innerHTML += "axis " + axisCount + " " + gp["axes"][axisCount] + "<br/>";
+    }
+    Object.keys(gp["buttons"]).forEach(function(buttonKey){
+        output.innerHTML += "button " + buttonKey + " " + JSON.stringify(gp["buttons"][buttonKey]["value"]) + "<br/>";
+    })
+}
+
+function gamepadDisplayUnknown(){
+    var output = document.getElementById("test");
+    output.innerHTML = "";
+    output.innerHTML += "Left stick horizontal  0<br/>";
+    output.innerHTML += "Left stick vertical    0<br/>";
+    output.innerHTML += "Right stick horizontal 0<br/>";
+    output.innerHTML += "Right stick vertical   0<br/>";
+    output.innerHTML += "Up                     0<br/>";
+    output.innerHTML += "Down                   0<br/>";
+    output.innerHTML += "Left click             0<br/>";
+    output.innerHTML += "Right click            0<br/>";
+    output.innerHTML += "<br/>";
+    output.innerHTML += navigator.platform + " (needs work)";
+}
+
+</script>
+</html>
