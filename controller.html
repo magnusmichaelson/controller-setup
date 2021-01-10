@@ -15,23 +15,14 @@ Controller not detected.
 <script>
 
 var controllerActive = false;
-
-var rAF = window.mozRequestAnimationFrame ||
-  window.webkitRequestAnimationFrame ||
-  window.requestAnimationFrame;
-
-var rAFStop = window.mozCancelRequestAnimationFrame ||
-  window.webkitCancelRequestAnimationFrame ||
-  window.cancelRequestAnimationFrame;
-
+var rAF = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.requestAnimationFrame;
+var rAFStop = window.mozCancelRequestAnimationFrame || window.webkitCancelRequestAnimationFrame || window.cancelRequestAnimationFrame;
 window.addEventListener("gamepadconnected", function() {
     controllerActive = true;
 });
 window.addEventListener("gamepaddisconnected", function() {
     controllerActive = false;
 });
-
-
 
 gameLoop();
 
