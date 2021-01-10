@@ -45,8 +45,6 @@ function gameLoop() {
 function gamepadStart(){
     if (navigator.platform == "MacIntel"){
         gamepadMacXbox360();
-    } else {
-        gamepadUnknown();
     }
 }
 
@@ -91,18 +89,14 @@ function gamepadMacXbox360(){
                 valid = false;
             }
             if (valid){
-                gamePadControls(gamepadData,gamePad);
+                gamePadControls(gamepadData);
+                gamePadExtra(gamePad);
             }
         } 
     }
 }
 
-function gamepadUnknown(){
-    var output = document.getElementById("test");
-    output.innerHTML = "Controller not recognized";
-}
-
-function gamePadControls(gamepadData,gamePad){
+function gamePadControls(gamepadData){
     var output = document.getElementById("test");
     output.innerHTML = "";
     output.innerHTML += "Left stick horizontal  " + gamepadData[0] + "<br/>";
@@ -114,16 +108,16 @@ function gamePadControls(gamepadData,gamePad){
     output.innerHTML += "Left click             " + gamepadData[6] + "<br/>";
     output.innerHTML += "Right click            " + gamepadData[7] + "<br/>";
     output.innerHTML += "<br/>";
-    output.innerHTML += navigator.platform + "<br/>";
-    output.innerHTML += "<br/>";
+}
+
+function gamePadExtra(gamePad){
+    var output = document.getElementById("test");
     for (var axisCount = 0; axisCount < gamePad["axes"].length; axisCount++){
         output.innerHTML += "axis " + axisCount + " " + gamePad["axes"][axisCount] + "<br/>";
-        console.log(gamePad["axes"][axisCount])
     }
     Object.keys(gamePad["buttons"]).forEach(function(buttonKey){
         output.innerHTML += "button " + buttonKey + " " + JSON.stringify(gamePad["buttons"][buttonKey]["value"]) + "<br/>";
     })
 }
-
 </script>
 </html>
