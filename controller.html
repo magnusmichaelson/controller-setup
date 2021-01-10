@@ -28,7 +28,7 @@ window.addEventListener("gamepadconnected", function() {
     controllerActive = true;
 });
 window.addEventListener("gamepaddisconnected", function() {
-    controllerActive = true;
+    controllerActive = false;
 });
 
 
@@ -44,66 +44,68 @@ function gameLoop() {
 
 function gamepadStart(){
     if (navigator.platform == "MacIntel"){
-        gamepadMac();
+        gamepadMacXbox360();
     } else {
         gamepadUnknown();
     }
 }
 
-function gamepadMac(){
+function gamepadMacXbox360(){
     var gamepadData = [];
     var valid = false;
     var gamePad = navigator.getGamepads()[0];
-    if (gamePad.hasOwnProperty("axes") && gamePad.hasOwnProperty("buttons")){
-        var valid = true;
-        if (gamePad["axes"].length > 3){
-            gamepadData[0] = gamePad.axes[0];
-            gamepadData[1] = gamePad.axes[1];
-            gamepadData[2] = gamePad.axes[2];
-            gamepadData[3] = gamePad.axes[3];
-        }
-        else {
-            valid = false;
-        }
-        if (gamePad["buttons"].hasOwnProperty(7)){
-            gamepadData[4] = gamePad.buttons[7].value;
-        }
-        else {
-            valid = false;
-        }
-        if (gamePad["buttons"].hasOwnProperty(6)){
-            gamepadData[5] = gamePad.buttons[6].value;
-        }
-        else {
-            valid = false;
-        }
-        if (gamePad["buttons"].hasOwnProperty(4)){
-            gamepadData[6] = gamePad.buttons[4].value;
-        }
-        else {
-            valid = false;
-        }
-        if (gamePad["buttons"].hasOwnProperty(5)){
-            gamepadData[7] = gamePad.buttons[5].value;
-        }
-        else {
-            valid = false;
-        }
-        if (valid){
-            gamepadDisplay(gamepadData,gamePad);
-        }
-    } 
+    if  ("id" in gamePad && gamePad["id"] == "Xbox 360 Controller (STANDARD GAMEPAD Vendor: 045e Product: 028e)"){
+        if ("axes" in gamePad && "buttons" in gamePad){
+            var valid = true;
+            if (gamePad["axes"].length > 3){
+                gamepadData[0] = gamePad.axes[0];
+                gamepadData[1] = gamePad.axes[1];
+                gamepadData[2] = gamePad.axes[2];
+                gamepadData[3] = gamePad.axes[3];
+            }
+            else {
+                valid = false;
+            }
+            if (gamePad["buttons"].hasOwnProperty(7)){
+                gamepadData[4] = gamePad.buttons[7].value;
+            }
+            else {
+                valid = false;
+            }
+            if (gamePad["buttons"].hasOwnProperty(6)){
+                gamepadData[5] = gamePad.buttons[6].value;
+            }
+            else {
+                valid = false;
+            }
+            if (gamePad["buttons"].hasOwnProperty(4)){
+                gamepadData[6] = gamePad.buttons[4].value;
+            }
+            else {
+                valid = false;
+            }
+            if (gamePad["buttons"].hasOwnProperty(5)){
+                gamepadData[7] = gamePad.buttons[5].value;
+            }
+            else {
+                valid = false;
+            }
+            if (valid){
+                gamePadControls(gamepadData,gamePad);
+            }
+        } 
+    }
 }
 
 function gamepadUnknown(){
     var output = document.getElementById("test");
-    output.innerHTML = "This controller/OS is not recognized";
+    output.innerHTML = "Controller not recognized";
 }
 
-function gamepadDisplay(gamepadData,gamePad){
+function gamePadControls(gamepadData,gamePad){
     var output = document.getElementById("test");
     output.innerHTML = "";
-    output.innerHTML += "asdasdasLeft stick horizontal  " + gamepadData[0] + "<br/>";
+    output.innerHTML += "Left stick horizontal  " + gamepadData[0] + "<br/>";
     output.innerHTML += "Left stick vertical    " + gamepadData[1] + "<br/>";
     output.innerHTML += "Right stick horizontal " + gamepadData[2] + "<br/>";
     output.innerHTML += "Right stick vertical   " + gamepadData[3] + "<br/>";
