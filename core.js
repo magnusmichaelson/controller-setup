@@ -1,4 +1,3 @@
-"use strict";
 var controllerActive = false;
 // @ts-ignore
 var rAF = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.requestAnimationFrame;
@@ -26,14 +25,14 @@ function gamepadStart() {
 function controllerMac(delta) {
     var buttons = {};
     var controller;
-    var navigate;
+    var controllerData;
     controller = navigator.getGamepads()[0];
     if ("id" in controller && controller["id"] == "Xbox 360 Controller (STANDARD GAMEPAD Vendor: 045e Product: 028e)") {
         if ("axes" in controller && "buttons" in controller) {
             buttons = controller["buttons"];
             if (controller["axes"].length > 3) {
                 if (4 in buttons && 5 in buttons && 6 in buttons && 7 in buttons) {
-                    navigate = {
+                    controllerData = {
                         clickLeft: controller.buttons[4].value,
                         clickRight: controller.buttons[5].value,
                         down: controller.buttons[6].value,
@@ -43,25 +42,16 @@ function controllerMac(delta) {
                         rightStickVertical: controller.axes[3],
                         up: controller.buttons[7].value
                     };
-                    controllerAction(navigate, delta);
+                    controllerAction(controllerData);
                 }
             }
         }
     }
 }
-function controllerAction(navigate, delta) {
+function controllerAction(controllerData) {
     var output = document.getElementById("test");
     if (output) {
-        output.innerHTML = "";
-        output.innerHTML += "Left stick horizontal  " + navigate["leftStickHorizontal"] + "<br/>";
-        output.innerHTML += "Left stick vertical    " + navigate["leftStickVertical"] + "<br/>";
-        output.innerHTML += "Right stick horizontal " + navigate["rightStickHorizontal"] + "<br/>";
-        output.innerHTML += "Right stick vertical   " + navigate["rightStickVertical"] + "<br/>";
-        output.innerHTML += "Up                     " + navigate["up"] + "<br/>";
-        output.innerHTML += "Down                   " + navigate["down"] + "<br/>";
-        output.innerHTML += "Left click             " + navigate["clickLeft"] + "<br/>";
-        output.innerHTML += "Right click            " + navigate["clickRight"] + "<br/>";
-        output.innerHTML += "<br/>";
+        output.innerHTML = JSON.stringify(controllerData, null, 4);
     }
 }
 function gamePadExtra(gamePad) {
